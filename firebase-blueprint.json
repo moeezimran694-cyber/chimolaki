@@ -1,0 +1,102 @@
+{
+  "entities": {
+    "menu_items": {
+      "title": "Menu Item",
+      "description": "A pizza or other item on the menu",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "image": { "type": "string" },
+        "category": { "type": "string" },
+        "options": {
+          "type": "object",
+          "properties": {
+            "sizes": { "type": "array", "items": { "type": "string" } },
+            "crusts": { "type": "array", "items": { "type": "string" } },
+            "toppings": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "required": ["name", "price", "image"]
+    },
+    "orders": {
+      "title": "Order",
+      "description": "A customer order",
+      "type": "object",
+      "properties": {
+        "customerName": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "size": { "type": "string" },
+              "crust": { "type": "string" },
+              "extras": { "type": "array", "items": { "type": "string" } },
+              "quantity": { "type": "number" },
+              "price": { "type": "number" }
+            }
+          }
+        },
+        "totalPrice": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["COD", "Online"] },
+        "paymentStatus": { "type": "string", "enum": ["Pending", "Paid"] },
+        "status": { "type": "string", "enum": ["Processing", "Preparing", "Out for Delivery", "Delivered"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["customerName", "phone", "address", "items", "totalPrice", "status"]
+    },
+    "messages": {
+      "title": "Message",
+      "description": "A message from a user",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "message": { "type": "string" },
+        "adminReply": { "type": "string" },
+        "status": { "type": "string", "enum": ["unread", "read"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "message", "status"]
+    },
+    "deals": {
+      "title": "Deal",
+      "description": "A promotional deal",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "discount": { "type": "number" },
+        "code": { "type": "string" },
+        "image": { "type": "string" }
+      },
+      "required": ["title", "description", "image"]
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Global app settings",
+      "type": "object",
+      "properties": {
+        "restaurantName": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "address": { "type": "string" },
+        "openingHours": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/menu_items": { "schema": "menu_items", "description": "Collection of pizzas" },
+    "/orders": { "schema": "orders", "description": "Collection of orders" },
+    "/messages": { "schema": "messages", "description": "Collection of user messages" },
+    "/deals": { "schema": "deals", "description": "Collection of deals" },
+    "/settings": { "schema": "settings", "description": "Global settings" }
+  }
+}

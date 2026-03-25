@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        request.auth.token.email == "moeezi396@gmail.com"
+      );
+    }
+
+    // Menu Items: Anyone can read, only admin can write
+    match /menu_items/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders: Anyone can create, only admin can list/update, user can get their own (if I had user auth, but for now I'll use a unique ID for tracking)
+    match /orders/{orderId} {
+      allow create: if true;
+      allow get: if true; // For tracking page
+      allow list, update, delete: if isAdmin();
+    }
+
+    // Messages: Anyone can create, only admin can read/update
+    match /messages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Deals: Anyone can read, only admin can write
+    match /deals/{dealId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Settings: Anyone can read, only admin can write
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Blog: Anyone can read, only admin can write
+    match /blog/{blogId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
